@@ -1,4 +1,5 @@
 'use strict'
+
 let empty = {};
 
 let isEmpty = obj => {

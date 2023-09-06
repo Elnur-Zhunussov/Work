@@ -1,4 +1,3 @@
-
 'use strict'
 
 function Calculator() {
@@ -15,7 +14,8 @@ function Calculator() {
         return this.a * this.b;
     };
 }
+
 let calculator = new Calculator();
 calculator.read();
-alert("Sum=" + calculator.sum());
-alert("Mul=" + calculator.mul());
+alert("Sum = " + calculator.sum());
+alert("Mul = " + calculator.mul());
