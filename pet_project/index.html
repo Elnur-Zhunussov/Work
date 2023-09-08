@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authorization Form</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital@0;1&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="container">
+        <h1 id="title">Welcome to Abstract Technology</h1>
+        <p id="description">Please sign in</p>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label name="username-label" for="username" id="username-label">Username</label>
+                <input class="form-control" type="text" name="username" id="username" required
+                    placeholder="Enter your username" />
+                <label name="password-label" for="password" id="password-label">Password</label>
+                <input class="form-control" type="password" name="password" id="password" required
+                    placeholder="Enter your password">
+            </div>
+
+            <div class="form-group">
+                <button type="submit" id="login-button" class="login-button">Log in</button>
+            </div>
+        </form>
+
+        <!--
+        <div id="login-error-container">
+            <p id="login-error">Invalid username or password <span id="error-msg">and/or
+                    password</span></p>
+        </div>
+
+        <div id="login-success-container">
+            <p id="login-success">Welcome back!<span id="error-msg">and/or password</span></p>
+        </div>
+        -->
+    </div>
+    <script src="app1.js"></script>
+</body>
+
+</html>
