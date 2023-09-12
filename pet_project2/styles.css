@@ -1,0 +1,66 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    line-height: 1.75;
+    color: white;
+    background-image: url(background\ image.jpg);
+    margin: 0;
+    font-weight: 400;
+    width: 100vw;
+    height: 100vh;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.post {
+    border: 3px solid RoyalBlue;
+    border-radius: 25px;
+    width: 25vw;
+    height: 25vh;
+    background-color: LightSkyBlue;
+    margin: 10px auto;
+    display: block;
+    color: black;
+    padding: 10px;
+}
+
+.post-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 3px dotted royalblue;
+    align-items: center;
+}
+
+.user-icon {
+    border: 1px solid black;
+}
+
+.userId {
+    margin: 0;
+    display: inline-block;
+}
+
+.postId {
+    margin: 0;
+    display: inline-block;
+}
+
+.post-title {
+    margin: 0;
+}
+
+.post-content {
+    margin: 0;
+    font-size: 1rem;
+}

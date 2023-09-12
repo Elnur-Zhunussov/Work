@@ -21,19 +21,24 @@ const users = [
 
 const loginForm = document.getElementById("login-form");
 const loginButton = document.getElementById("login-button");
+const loginSuccess = document.getElementById("login-success-container")
+const loginError = document.getElementById("login-error-container")
 
-loginButton.addEventListener("click", (e) => {
+loginButton.addEventListener("click", validateForm);
+
+function validateForm(e) {
     e.preventDefault();
     const enteredUsername = loginForm.username.value;
     const enteredPassword = loginForm.password.value;
+    const user = users.find(user => user.username === enteredUsername && user.password === enteredPassword)
 
     if (enteredUsername == '' || enteredPassword == '') {
-        alert('Please ensure that both correct username and password are entered')
+        loginError.style.display = 'flex';
     } else {
-        if (users.find(user => user.username === enteredUsername && user.password === enteredPassword)) {
-            alert(`Welcome,. Your role is`);
+        if (user) {
+            loginSuccess.style.display = 'flex';
         } else {
-            alert('Incorrect username or password');
+            loginError.style.display = 'flex';
         }
-    }
-})
+    };
+};
