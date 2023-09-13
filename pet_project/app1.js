@@ -3,13 +3,13 @@ const users = [
         'username': 'JackBoHorse',
         'email': 'horseman11@gmail.com',
         'password': 'ZyeehawpartnerZ',
-        'role': 'user',
+        'role': 'reader',
     },
     {
         'username': 'lilprince',
         'email': 'daprince@gmail.com',
         'password': 'indahood777',
-        'role': 'user',
+        'role': 'editor',
     },
     {
         'username': 'Simon',
@@ -26,19 +26,25 @@ const loginError = document.getElementById("login-error-container")
 
 loginButton.addEventListener("click", validateForm);
 
+function nextPage() {
+    setTimeout(() => {
+        document.location.href = 'index2.html';
+    }, 3000);
+}
+
 function validateForm(e) {
     e.preventDefault();
     const enteredUsername = loginForm.username.value;
     const enteredPassword = loginForm.password.value;
     const user = users.find(user => user.username === enteredUsername && user.password === enteredPassword)
 
-    if (enteredUsername == '' || enteredPassword == '') {
-        loginError.style.display = 'flex';
+    localStorage.setItem('role', `${user.role}`);
+
+    if (user) {
+        loginSuccess.style.display = 'flex';
+        nextPage();
     } else {
-        if (user) {
-            loginSuccess.style.display = 'flex';
-        } else {
-            loginError.style.display = 'flex';
-        }
-    };
+        loginError.style.display = 'flex';
+        location.reload();
+    }
 };
