@@ -32,19 +32,24 @@ function nextPage() {
     }, 3000);
 }
 
+function reload() {
+    setTimeout(() => {
+        location.reload();;
+    }, 3000);
+}
+
 function validateForm(e) {
     e.preventDefault();
     const enteredUsername = loginForm.username.value;
     const enteredPassword = loginForm.password.value;
     const user = users.find(user => user.username === enteredUsername && user.password === enteredPassword)
 
-    localStorage.setItem('role', `${user.role}`);
-
     if (user) {
         loginSuccess.style.display = 'flex';
+        localStorage.setItem('role', `${user.role}`);
         nextPage();
     } else {
         loginError.style.display = 'flex';
-        location.reload();
+        reload();
     }
 };
