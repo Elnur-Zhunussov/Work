@@ -1,10 +1,12 @@
-let xhr = new XMLHttpRequest();
+let getData = new XMLHttpRequest();
 
 let data = null;
 let userRole = localStorage.getItem('role');
+let userId = localStorage.getItem('ID');
 const container = document.querySelector('#container');
 const header = document.querySelector('#header');
 
+// Create
 function createHtml() {
     for (let i = 0; i < 5; i++) {
         let base = `
@@ -19,7 +21,7 @@ function createHtml() {
             <div class="options">
                 <button type="button" class="edit">Edit</button>
                 <button type="button" class="delete">Delete</button>
-            </div>    
+            <div> 
             </div>
         `;
         container.insertAdjacentHTML('beforeend', base);
@@ -47,18 +49,18 @@ function permissions() {
     }
 }
 
-xhr.onload = function () {
-    if (xhr.status >= 200 && xhr.status < 300) {
-        data = JSON.parse(xhr.response);
+getData.onload = function () {
+    if (getData.status >= 200 && getData.status < 300) {
+        data = JSON.parse(getData.response);
         createHtml();
         permissions();
     } else {
-        alert('error')
+
     };
 };
 
-xhr.open('GET', 'https://jsonplaceholder.typicode.com/posts');
-xhr.send();
+getData.open('GET', 'https://jsonplaceholder.typicode.com/posts');
+getData.send();
 
 header.addEventListener('click', function (event) {
     if (event.target.id === 'create') {
@@ -83,30 +85,93 @@ function showCreatePopup() {
 
     const postButton = createModal.querySelector('#postButton');
     postButton.addEventListener('click', function () {
+        title = createModal.querySelector('#postTitle').value;
+        body = createModal.querySelector('#postContent').value;
 
-        createModal.remove();
+        const newPost = {};
+
+        newPost.title = title;
+        newPost.body = body;
+        newPost.userId = userId;
+
+        let createData = new XMLHttpRequest();
+
+        createData.open('POST', 'https://jsonplaceholder.typicode.com/posts');
+        createData.setRequestHeader('Content-Type', 'application/json');
+
+        createData.addEventListener('load', function () {
+            if (createData.status === 201 && createData.readyState === 4) {
+                const result = JSON.parse(createData.responseText);
+
+                const post =
+                    `   <div class="post">
+                            <div class="post-info">
+                                <a href="https://shorturl.at/dtVZ7" target="_blank"><img src="user_icon.png" class="user-icon" alt="User icon" width="50px"></a>
+                                <h3 class="userId">User ID: ${result.userId}</h3>
+                                <h3 class="postId">Post ID: ${result.id}</h3>
+                            </div>
+                            <h3 class="post-title">${result.title}</h3>
+                            <p class="post-content">${result.body}</p>
+                            <div class="options">
+                                <button type="button" class="edit">Edit</button>
+                                <button type="button" class="delete">Delete</button>
+                            <div>
+                        </div>`
+
+                container.insertAdjacentHTML('afterbegin', post);
+
+                createModal.remove();
+            } else {
+                throw new Error("Bad request");
+            }
+        });
+        createData.send(JSON.stringify(newPost));
     });
 }
+// Create end
 
+// Events
 container.addEventListener('click', function (event) {
     if (event.target.classList.contains('edit')) {
         const parentDiv = event.target.closest('.post');
+        const postId = parentDiv.querySelector('.postId').textContent.match(/\d+/);
         const postTitle = parentDiv.querySelector('.post-title').textContent;
         const postContent = parentDiv.querySelector('.post-content').textContent;
 
-        showEditPopup(postTitle, postContent);
+        showEditPopup(postId, postTitle, postContent, parentDiv);
+    }
+    if (event.target.classList.contains('delete')) {
+        let post = event.target.closest('.post');
+        let idH3 = post.querySelector('.postId');
+        let id = idH3.textContent.match(/\d+/);
+
+        let deleteData = new XMLHttpRequest();
+
+        deleteData.open('DELETE', `https://jsonplaceholder.typicode.com/posts/${id}`);
+
+        deleteData.onload = function () {
+            if ( deleteData.status === 200 && deleteData.readyState === 4 ) {
+                post.remove()
+            } else {
+                throw new Error("Bad request");
+            }
+        };
+        deleteData.send();
     }
 });
+// Events end
 
-function showEditPopup(title, content) {
+// Edit
+function showEditPopup(postId, title, content, parentDiv) {
     const editModal = document.createElement('div');
     editModal.className = 'modal';
 
     editModal.innerHTML = `
         <div class="editModal-content">
             <h2>Edit Post</h2>
-            <input type="text" id="editedTitle" value="${title}">
-            <textarea id="editedContent" rows="6" cols="100%">${content}</textarea>
+            <h3 id="postId">Post ID: ${postId}</h3>
+            <input type="text" id="postTitle" value="${title}">
+            <textarea id="postContent" rows="6" cols="100">${content}</textarea>
             <button id="saveButton">Save changes</button>
         </div>
     `;
@@ -114,8 +179,42 @@ function showEditPopup(title, content) {
     document.body.appendChild(editModal);
 
     const saveButton = editModal.querySelector('#saveButton');
-    saveButton.addEventListener('click', function () {
 
-        editModal.remove();
+    saveButton.addEventListener('click', function () {
+        editedTitle = editModal.querySelector('#postTitle').value;
+        editedBody = editModal.querySelector('#postContent').value;
+
+        const editedPost = {};
+
+        editedPost.title = editedTitle;
+        editedPost.body = editedBody;
+        editedPost.userId = userId;
+
+
+        let updateData = new XMLHttpRequest();
+        updateData.open('PUT', `https://jsonplaceholder.typicode.com/posts/${postId}`);
+        updateData.setRequestHeader('Content-Type', 'application/json');
+
+        updateData.addEventListener('load', function () {
+            if (updateData.status === 200 && updateData.readyState === 4) {
+                parentDiv.querySelector('.post-title').textContent = editedTitle;
+                parentDiv.querySelector('.post-content').textContent = editedBody;
+                editModal.remove();
+            } else {
+                throw new Error("Bad request");
+            }
+        });
+        updateData.send(JSON.stringify(editedPost));
     });
 }
+// Edit end
+
+// Logut
+const logout = document.getElementById('logout');
+
+logout.addEventListener('click', function() {
+    document.location.href = 'index1.html';
+    localStorage.removeItem('role');
+    localStorage.removeItem('ID');
+})
+// Logut end

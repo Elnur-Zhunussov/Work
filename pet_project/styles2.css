@@ -104,6 +104,7 @@ a {
     width: 100%;
     display: flex;
     flex-direction: row;
+    align-items: center;
     justify-content: space-between;
 }
 
@@ -133,25 +134,16 @@ a {
     background-color: steelblue;
 }
 
-#postTitle {
-    width: 100%;
-}
-
-#postContent {
-    width: 100%;
-    resize: none;
-}
-
 h2 {
     margin: 0;
     text-align: center;
 }
 
-#editedTitle {
+#postTitle {
     width: 100%;
 }
 
-#editedContent {
+#postContent {
     width: 100%;
     resize: none;
 }
