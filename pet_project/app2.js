@@ -1,71 +1,64 @@
-let getData = new XMLHttpRequest();
-
-let data = null;
-let userRole = localStorage.getItem('role');
-let userId = localStorage.getItem('ID');
 const container = document.querySelector('#container');
 const header = document.querySelector('#header');
+const createButton = document.getElementById('create');
+const logout = document.getElementById('logout');
+const userId = localStorage.getItem('ID');
+const userRole = localStorage.getItem('role');
+let data = null;
 
-// Create
 function createHtml() {
     for (let i = 0; i < 5; i++) {
-        let base = `
-            <div class="post">
+        const post = data[i];
+        const postElement = document.createElement('div');
+        postElement.classList.add('post');
+        postElement.innerHTML = `
             <div class="post-info">    
                 <a href="https://shorturl.at/dtVZ7" target="_blank"><img src="user_icon.png" class="user-icon" alt="User icon" width="50px"></a>
-                <h3 class="userId">User ID: ${data[i]["userId"]}</h3>
-                <h3 class="postId">Post ID: ${data[i]["id"]}</h3>
+                <h3 class="userId">User ID: ${post.userId}</h3>
+                <h3 class="postId">Post ID: ${post.id}</h3>
             </div>
-                <h3 class="post-title">${data[i]["title"]}</h3>
-                <p class="post-content">${data[i]["body"]}</p>
+            <h3 class="post-title">${post.title}</h3>
+            <p class="post-content">${post.body}</p>
             <div class="options">
                 <button type="button" class="edit">Edit</button>
                 <button type="button" class="delete">Delete</button>
-            <div> 
             </div>
         `;
-        container.insertAdjacentHTML('beforeend', base);
+        container.appendChild(postElement);
     }
-};
+}
 
-function permissions() {
+function toggleButtons() {
     const editButtons = document.querySelectorAll('.edit');
     const deleteButtons = document.querySelectorAll('.delete');
-    const createButton = document.getElementById('create');
 
     if (userRole === 'reader') {
-        editButtons.forEach(function (button) {
-            button.style.display = 'none';
-        });
-        deleteButtons.forEach(function (button) {
-            button.style.display = 'none';
-        });
+        editButtons.forEach(button => button.style.display = 'none');
+        deleteButtons.forEach(button => button.style.display = 'none');
         createButton.style.display = 'none';
     } else if (userRole === 'editor') {
-        deleteButtons.forEach(function (button) {
-            button.style.display = 'none';
-        });
+        deleteButtons.forEach(button => button.style.display = 'none');
         createButton.style.display = 'none';
     }
 }
 
-getData.onload = function () {
-    if (getData.status >= 200 && getData.status < 300) {
-        data = JSON.parse(getData.response);
-        createHtml();
-        permissions();
-    } else {
-
+function fetchData() {
+    const getData = new XMLHttpRequest();
+    getData.open('GET', 'https://jsonplaceholder.typicode.com/posts');
+    getData.onload = function () {
+        if (getData.status >= 200 && getData.status < 300) {
+            data = JSON.parse(getData.response);
+            createHtml();
+            toggleButtons();
+        } else {
+            console.error('Failed to fetch data');
+        }
     };
-};
+    getData.send();
+}
 
-getData.open('GET', 'https://jsonplaceholder.typicode.com/posts');
-getData.send();
-
-header.addEventListener('click', function (event) {
-    if (event.target.id === 'create') {
-        showCreatePopup();
-    }
+createButton.addEventListener('click', function () {
+    showCreatePopup();
 });
 
 function showCreatePopup() {
@@ -128,9 +121,7 @@ function showCreatePopup() {
         createData.send(JSON.stringify(newPost));
     });
 }
-// Create end
 
-// Events
 container.addEventListener('click', function (event) {
     if (event.target.classList.contains('edit')) {
         const parentDiv = event.target.closest('.post');
@@ -150,18 +141,16 @@ container.addEventListener('click', function (event) {
         deleteData.open('DELETE', `https://jsonplaceholder.typicode.com/posts/${id}`);
 
         deleteData.onload = function () {
-            if ( deleteData.status === 200 && deleteData.readyState === 4 ) {
+            if (deleteData.status === 200 && deleteData.readyState === 4) {
                 post.remove()
             } else {
-                throw new Error("Bad request");
+                console.error('Failed to delete post');
             }
         };
         deleteData.send();
     }
 });
-// Events end
 
-// Edit
 function showEditPopup(postId, title, content, parentDiv) {
     const editModal = document.createElement('div');
     editModal.className = 'modal';
@@ -207,14 +196,22 @@ function showEditPopup(postId, title, content, parentDiv) {
         updateData.send(JSON.stringify(editedPost));
     });
 }
-// Edit end
 
-// Logut
-const logout = document.getElementById('logout');
-
-logout.addEventListener('click', function() {
+logout.addEventListener('click', function () {
     document.location.href = 'index1.html';
     localStorage.removeItem('role');
     localStorage.removeItem('ID');
-})
-// Logut end
+});
+
+// Fetch data when the page loads
+// fetchData();
+
+
+async function send() {
+    await axios.get('https://jsonplaceholder.typicode.com/posts')
+        .then(response => { console.log('list: ', response.data); data = response.data; })
+    createHtml();
+    permissions();
+}
+
+send()
