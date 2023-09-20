@@ -147,3 +147,12 @@ h2 {
     width: 100%;
     resize: none;
 }
+
+#editedTitle {
+    width: 100%;
+}
+
+#editedContent {
+    width: 100%;
+    resize: none;
+}
