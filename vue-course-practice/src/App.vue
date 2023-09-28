@@ -1,14 +1,10 @@
 <template>
     <div>
         Работает!
-        aasdfasdf
-        asdf
-        as
-        fsdfsdgf
     </div>
 </template>
 
-<script>
+<script setup>
 
 </script>
 

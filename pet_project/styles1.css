@@ -26,14 +26,12 @@ body {
 }
 
 form {
-    margin: auto;
-    padding: auto;
+    margin: 15px;
+    padding: 30px;
     background-color: rgba(27, 27, 50, 0.8);
     border-radius: 0.25rem;
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: 400;
-    width: 25vw;
-    height: auto;
 }
 
 #title,
@@ -58,15 +56,6 @@ form {
     border-radius: 0.25rem;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     font-family: 'Raleway', sans-serif;
-}
-
-form {
-    margin: 15px;
-    padding: 30px;
-    background-color: rgba(27, 27, 50, 0.8);
-    border-radius: 0.25rem;
-    font-size: 1rem;
-    font-weight: 400;
 }
 
 .form-group {
